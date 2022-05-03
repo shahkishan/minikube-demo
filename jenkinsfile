@@ -4,7 +4,7 @@ pipeline {
         pollSCM '* * * * *'
     }
     stages {
-        stage('Build') {
+        stage('Compile') {
             steps {
                 sh './gradlew assemble'
             }
@@ -12,6 +12,12 @@ pipeline {
         stage('Test') {
             steps {
                 sh './gradlew test'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'docker image build . -t minikube-demo-${BRANCH_NAME}:${currentBuild.number}'
             }
         }
     }
